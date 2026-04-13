@@ -40,7 +40,7 @@ function PayDrawer({ isOpen, onClose }) {
             toast.success("Payment successful!");
             onClose();
             setFormData({ amount: '', title: '', category: 'Food', description: '' });
-        } catch (err) {
+        } catch {
             // Error handled by context
         } finally {
             setLoading(false);

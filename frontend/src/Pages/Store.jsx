@@ -53,7 +53,7 @@ function Store() {
             toast.success(`Successfully purchased ${item.title}!`);
             setPoints(prev => prev - item.cost);
             setPurchasedItems(prev => [...prev, item.id]);
-        } catch (error) {
+        } catch {
             toast.error("Purchase failed. Try again later.");
         }
     };

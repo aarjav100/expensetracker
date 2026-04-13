@@ -123,7 +123,7 @@ function TransactionDetailDrawer({ isOpen, onClose, transaction }) {
                             <div className="space-y-4">
                                 <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Metadata Details</h4>
                                 <div className="p-6 bg-slate-800/50 rounded-3xl border border-slate-700/30 grid grid-cols-1 gap-4">
-                                    {Object.entries(transaction.metadata).filter(([_,v]) => v).map(([k,v]) => (
+                                    {Object.entries(transaction.metadata).filter(([,v]) => v).map(([k,v]) => (
                                         <div key={k} className="flex justify-between items-center">
                                             <span className="text-xs text-slate-500 capitalize">{k.replace(/([A-Z])/g, ' $1')}</span>
                                             <span className="text-xs text-white font-bold">{v}</span>

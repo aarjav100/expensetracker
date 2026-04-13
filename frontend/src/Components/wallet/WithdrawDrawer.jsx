@@ -5,7 +5,7 @@ import useWallet from '../../Hooks/useWallet';
 import PinModal from './PinModal';
 
 function WithdrawDrawer({ isOpen, onClose }) {
-    const { withdraw, balance, verifyPin } = useWallet();
+    const { withdraw, balance } = useWallet();
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
     const [isPinModalOpen, setIsPinModalOpen] = useState(false);
@@ -45,7 +45,7 @@ function WithdrawDrawer({ isOpen, onClose }) {
                 setSuccess(false);
                 onClose();
             }, 2000);
-        } catch (err) {
+        } catch {
             // Error handled by context
         } finally {
             setLoading(false);

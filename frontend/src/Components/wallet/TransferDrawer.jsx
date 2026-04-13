@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import useWallet from '../../Hooks/useWallet';
 import PinModal from './PinModal';
-import api from '../../Services/api';
+
 
 function TransferDrawer({ isOpen, onClose }) {
     const { transfer, balance } = useWallet();
@@ -32,7 +32,7 @@ function TransferDrawer({ isOpen, onClose }) {
                 if (email.includes('@')) {
                     setRecipient({ name: email.split('@')[0].replace('.', ' '), email });
                 }
-            } catch (err) {
+            } catch {
                 setRecipient(null);
             }
         }, 500);
@@ -56,7 +56,7 @@ function TransferDrawer({ isOpen, onClose }) {
             setEmail('');
             setAmount('');
             setNote('');
-        } catch (err) {
+        } catch {
             // Error handled by context
         } finally {
             setLoading(false);

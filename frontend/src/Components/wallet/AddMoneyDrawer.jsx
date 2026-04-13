@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import useWallet from '../../Hooks/useWallet';
-import api from '../../Services/api';
+
 
 function AddMoneyDrawer({ isOpen, onClose }) {
-    const { addMoney, refreshWallet } = useWallet();
+    const { addMoney } = useWallet();
     const [activeTab, setActiveTab] = useState('upi');
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
@@ -14,7 +14,6 @@ function AddMoneyDrawer({ isOpen, onClose }) {
     // Legacy simulated states
     const [upiId, setUpiId] = useState('');
     const [cardData, setCardData] = useState({ number: '', expiry: '', cvv: '', name: '' });
-    const [bankName, setBankName] = useState('SBI');
 
     const handleAddSimulated = async (e) => {
         e.preventDefault();
@@ -25,8 +24,7 @@ function AddMoneyDrawer({ isOpen, onClose }) {
             const metadata = {
                 method: activeTab,
                 upiId: activeTab === 'upi' ? upiId : undefined,
-                cardLast4: activeTab === 'card' ? cardData.number.slice(-4) : undefined,
-                bankName: activeTab === 'netbanking' ? bankName : undefined
+                cardLast4: activeTab === 'card' ? cardData.number.slice(-4) : undefined
             };
 
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -38,8 +36,8 @@ function AddMoneyDrawer({ isOpen, onClose }) {
                 onClose();
                 setAmount('');
             }, 2000);
-        } catch (err) {
-            console.error(err);
+        } catch {
+            // Error handled by context
         } finally {
             setLoading(false);
         }
@@ -143,8 +141,11 @@ function AddMoneyDrawer({ isOpen, onClose }) {
                                                     className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white text-sm outline-none"
                                                 />
                                             </div>
-                                            <button className="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold transition-all uppercase text-xs tracking-widest">
-                                                Simulate UPI Pay
+                                            <button 
+                                                disabled={loading}
+                                                className="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold transition-all uppercase text-xs tracking-widest disabled:opacity-50"
+                                            >
+                                                {loading ? 'Processing...' : 'Simulate UPI Pay'}
                                             </button>
                                         </form>
                                     )}
@@ -159,8 +160,11 @@ function AddMoneyDrawer({ isOpen, onClose }) {
                                                 onChange={e => setCardData({...cardData, number: e.target.value})}
                                                 className="w-full px-4 py-3 bg-slate-900 border border-slate-700 rounded-xl text-white text-sm outline-none"
                                             />
-                                            <button className="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold transition-all uppercase text-xs tracking-widest">
-                                                Simulate Card Pay
+                                            <button 
+                                                disabled={loading}
+                                                className="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold transition-all uppercase text-xs tracking-widest disabled:opacity-50"
+                                            >
+                                                {loading ? 'Processing...' : 'Simulate Card Pay'}
                                             </button>
                                         </form>
                                     )}
@@ -168,8 +172,11 @@ function AddMoneyDrawer({ isOpen, onClose }) {
                                     {activeTab === 'netbanking' && (
                                         <form onSubmit={handleAddSimulated} className="space-y-4 text-center">
                                             <p className="text-slate-400 text-xs italic">Demo NetBanking simulation.</p>
-                                            <button className="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold transition-all uppercase text-xs tracking-widest">
-                                                Simulate Bank Pay
+                                            <button 
+                                                disabled={loading}
+                                                className="w-full py-4 bg-slate-700 hover:bg-slate-600 text-white rounded-2xl font-bold transition-all uppercase text-xs tracking-widest disabled:opacity-50"
+                                            >
+                                                {loading ? 'Processing...' : 'Simulate Bank Pay'}
                                             </button>
                                         </form>
                                     )}

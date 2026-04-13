@@ -1,8 +1,7 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../Services/api';
 import toast from 'react-hot-toast';
-
-const WalletContext = createContext();
+import { WalletContext } from './WalletContextObject';
 
 export const WalletProvider = ({ children }) => {
     const [balance, setBalance] = useState(0);
@@ -138,11 +137,4 @@ export const WalletProvider = ({ children }) => {
         </WalletContext.Provider>
     );
 };
-
-export const useWallet = () => {
-    const context = useContext(WalletContext);
-    if (!context) {
-        throw new Error('useWallet must be used within a WalletProvider');
-    }
-    return context;
-};
+// No extra export needed for WalletContext as it is exported from WalletContextObject.js

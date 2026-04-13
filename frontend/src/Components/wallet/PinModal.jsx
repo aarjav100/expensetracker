@@ -40,7 +40,7 @@ function PinModal({ isOpen, onClose, onSuccess, title = "Enter PIN", subtitle })
         try {
             await onSuccess(fullPin);
             onClose();
-        } catch (err) {
+        } catch {
             setPin(['', '', '', '', '', '']);
             inputs.current[0].focus();
         } finally {

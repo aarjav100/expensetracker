@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 function Reports() {
     const [expenses, setExpenses] = useState([]);
-    const [loading, setLoading] = useState(false);
+
     const [aiLoading, setAiLoading] = useState(false);
     const [income, setIncome] = useState("");
     const [aiPlan, setAiPlan] = useState(null);
@@ -21,7 +21,7 @@ function Reports() {
         try {
             const res = await api.get("/expense");
             setExpenses(Array.isArray(res.data) ? res.data : res.data?.expenses || []);
-        } catch (err) {
+        } catch {
             toast.error("Failed to fetch data for reports");
         }
     };

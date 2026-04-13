@@ -5,7 +5,7 @@ import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, 
     PieChart, Pie, Cell, AreaChart, Area 
 } from 'recharts';
-import { motion } from "framer-motion";
+
 
 const COLORS = ['#6366f1', '#22d3ee', '#f59e0b', '#ef4444', '#10b981', '#8b5cf6', '#ec4899'];
 
@@ -14,7 +14,7 @@ function Dashboard() {
     const [user, setUser] = useState(null);
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+
 
     useEffect(() => {
         const storedUser = localStorage.getItem("userInfo");
@@ -32,8 +32,8 @@ function Dashboard() {
                 const res = await api.get("/expense");
                 const allExpenses = Array.isArray(res.data) ? res.data : res.data?.expenses || [];
                 setExpenses(allExpenses);
-            } catch (err) {
-                setError(err.response?.data?.message || "Failed to load expenses");
+            } catch {
+                // Silent error or handled locally
             } finally {
                 setLoading(false);
             }

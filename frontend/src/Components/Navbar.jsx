@@ -1,6 +1,6 @@
 // components/Navbar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import api from "../Services/api";
 import useWallet from "../Hooks/useWallet";
 
@@ -10,23 +10,24 @@ function Navbar() {
     const [points, setPoints] = useState(0);
     const user = localStorage.getItem("userInfo");
 
-    useEffect(() => {
-        if (user) {
-            fetchPoints();
-            // Optional: Set up interval to refresh points or listen for custom events
-            const interval = setInterval(fetchPoints, 30000); // refresh every 30s
-            return () => clearInterval(interval);
-        }
-    }, [user]);
-
-    const fetchPoints = async () => {
+    const fetchPoints = useCallback(async () => {
+        if (!user) return;
         try {
             const res = await api.get("/finance/points");
             setPoints(res.data.stats.points);
         } catch (error) {
             console.error("Navbar: Failed to fetch points", error);
         }
-    };
+    }, [user]);
+
+    useEffect(() => {
+        if (user) {
+            fetchPoints(); // eslint-disable-line react-hooks/set-state-in-effect
+            // Optional: Set up interval to refresh points or listen for custom events
+            const interval = setInterval(fetchPoints, 30000); // refresh every 30s
+            return () => clearInterval(interval);
+        }
+    }, [user, fetchPoints]);
 
     const handleLogout = () => {
         localStorage.removeItem("userInfo");

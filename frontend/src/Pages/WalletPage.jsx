@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import useWallet from '../Hooks/useWallet';
 import api from '../Services/api';
 import AddMoneyDrawer from '../Components/wallet/AddMoneyDrawer';
@@ -27,11 +27,7 @@ function WalletPage() {
     const [isPinVerifyOpen, setIsPinVerifyOpen] = useState(false);
     const [pinAction, setPinAction] = useState(null); // 'unlock'
 
-    useEffect(() => {
-        fetchTransactions();
-    }, [filters, pagination.page]);
-
-    const fetchTransactions = async () => {
+    const fetchTransactions = useCallback(async () => {
         try {
             const res = await api.get('/wallet/transactions', {
                 params: { page: pagination.page, ...filters }
@@ -41,7 +37,11 @@ function WalletPage() {
         } catch (error) {
             console.error("Failed to fetch wallet transactions", error);
         }
-    };
+    }, [pagination.page, filters]);
+
+    useEffect(() => {
+        fetchTransactions(); // eslint-disable-line react-hooks/set-state-in-effect
+    }, [fetchTransactions]);
 
     const handleLockToggle = () => {
         if (!wallet?.pin) {
