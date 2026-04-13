@@ -78,3 +78,61 @@ export const generateBudgetPlan = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+export const predictExpenses = async (req, res) => {
+    try {
+        // 1. Fetch historical data for this user
+        const expenses = await expenseModel.find({ user: req.user._id }).sort({ date: 1 });
+        
+        if (expenses.length < 5) {
+            return res.status(200).json({ 
+                prediction: null, 
+                message: "Insufficient data for prediction. Keep tracking for a few more weeks!",
+                isFallback: true
+            });
+        }
+
+        // 2. Aggregate monthly spend for ML input
+        const monthlyAgg = expenses.reduce((acc, curr) => {
+            const d = new Date(curr.date);
+            const key = `${d.getFullYear()}-${d.getMonth() + 1}`;
+            if (curr.type === 'expense') acc[key] = (acc[key] || 0) + curr.amount;
+            return acc;
+        }, {});
+
+        const history = Object.values(monthlyAgg);
+
+        // 3. Call Python ML Service (FastAPI)
+        // Note: In production, ML_SERVICE_URL would be an env var
+        const mlUrl = process.env.ML_SERVICE_URL || 'http://localhost:8000/predict';
+        
+        try {
+            const response = await fetch(mlUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ history, income: req.body.monthlyIncome || 0 })
+            });
+
+            if (!response.ok) throw new Error("ML Service connection failed");
+            
+            const result = await response.json();
+            res.status(200).json({
+                prediction: result.prediction,
+                savings: result.predicted_savings,
+                recommendation: result.recommendation,
+                isFallback: false
+            });
+        } catch (mlErr) {
+            console.error("ML Service Error:", mlErr);
+            // Fallback to a simple 3-month average if ML service is down
+            const avg = history.slice(-3).reduce((a, b) => a + b, 0) / Math.min(history.length, 3);
+            res.status(200).json({
+                prediction: avg * 1.05, // simple buffer
+                message: "Using statistical fallback (ML service busy)",
+                isFallback: true
+            });
+        }
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

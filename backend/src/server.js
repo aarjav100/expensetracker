@@ -6,6 +6,8 @@ import expenseRoutes from './routes/expenseRouter.js';
 import financeRoutes from './routes/financeRouter.js';
 import aiRoutes from './routes/aiRouter.js';
 import walletRoutes from './routes/walletRoutes.js';
+import budgetRoutes from './routes/budgetRouter.js';
+import summaryRoutes from './routes/summaryRouter.js';
 import connectDB from './config/db.js';
 import startCronJobs from './utils/cronJobs.js';
 
@@ -30,6 +32,8 @@ app.use('/api/expense', expenseRoutes);
 app.use('/api/finance', financeRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/wallet', walletRoutes);
+app.use('/api/budget', budgetRoutes);
+app.use('/api/summary', summaryRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

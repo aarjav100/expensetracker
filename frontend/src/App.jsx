@@ -21,98 +21,35 @@ import Store from "./Pages/Store.jsx";
 import Reports from "./Pages/Reports.jsx";
 import LandingPage from "./Pages/LandingPage.jsx";
 import WalletPage from "./Pages/WalletPage.jsx";
-import MockBank from "./Pages/MockBank.jsx";
-import { WalletProvider } from "./Context/WalletContext.jsx";
+import BudgetPlanner from "./Pages/BudgetPlanner.jsx";
+import PredictionPage from "./Pages/PredictionPage.jsx";
+import MainLayout from "./Components/Layout/MainLayout.jsx";
 
 function Layout() {
-  const location = useLocation();
   const user = localStorage.getItem("userInfo");
 
   return (
-    <>
-      {(location.pathname !== "/login" && location.pathname !== "/signup" && location.pathname !== "/") && (
-        <Navbar />
-      )}
+    <Routes>
+      <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
+      <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup />} />
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/mock-bank" element={<MockBank />} />
 
-      <Routes>
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/dashboard" /> : <Login />}
-        />
+      {/* Protected Layout Area */}
+      <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/add-expense" element={<AddExpense />} />
+        <Route path="/history" element={<Expenses />} />
+        <Route path="/budget" element={<BudgetPlanner />} />
+        <Route path="/prediction" element={<PredictionPage />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/store" element={<Store />} />
+        <Route path="/reports" element={<Reports />} />
+        <Route path="/wallet" element={<WalletPage />} />
+      </Route>
 
-        <Route
-          path="/signup"
-          element={user ? <Navigate to="/dashboard" /> : <Signup />}
-        />
-
-        <Route
-          path="/"
-          element={<LandingPage />}
-        />
-
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/add-expense"
-          element={
-            <ProtectedRoute>
-              <AddExpense />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/expenses"
-          element={
-            <ProtectedRoute>
-              <Expenses />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/store"
-          element={
-            <ProtectedRoute>
-              <Store />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedRoute>
-              <Reports />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/wallet"
-          element={
-            <ProtectedRoute>
-              <WalletPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/mock-bank" element={<MockBank />} />
-
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
-    </>
+      <Route path="*" element={<Navigate to="/" />} />
+    </Routes>
   );
 }
 
