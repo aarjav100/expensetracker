@@ -23,7 +23,9 @@ import LandingPage from "./Pages/LandingPage.jsx";
 import WalletPage from "./Pages/WalletPage.jsx";
 import BudgetPlanner from "./Pages/BudgetPlanner.jsx";
 import PredictionPage from "./Pages/PredictionPage.jsx";
+import MockBank from "./Pages/MockBank.jsx";
 import MainLayout from "./Components/Layout/MainLayout.jsx";
+import { WalletProvider } from "./Context/WalletContext.jsx";
 
 function Layout() {
   const user = localStorage.getItem("userInfo");
