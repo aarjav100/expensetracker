@@ -20,6 +20,7 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'http://localhost:5174', // Vite alternative port
+        'https://expensetracker-frontend1-uxzr.onrender.com', // Render deployed frontend
         process.env.FRONTEND_URL // for production
     ].filter(Boolean),
     credentials: true
