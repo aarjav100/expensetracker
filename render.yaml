@@ -1,0 +1,34 @@
+services:
+  # Backend Web Service
+  - type: web
+    name: spendwise-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        fromService:
+          type: static_site
+          name: spendwise-frontend
+          property: url
+
+  # Frontend Static Site
+  - type: static_site
+    name: spendwise-frontend
+    runtime: node
+    rootDir: frontend
+    buildCommand: npm run build
+    publishDir: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: spendwise-api
+          property: url
